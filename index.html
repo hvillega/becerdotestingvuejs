@@ -11,28 +11,39 @@
 <body>
 
 <div id="app">
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col">
-                <h1>{{greetings}}</h1>
+    <div class="container">
+        <div class="card mt-5">
+            <h2 class="card-header">Near-Earth Objects</h2>
+            <div class="m-3" v-cloak v-if="numAsteroids > 0">
+                <p>Showing <strong>{{numAsteroids}}</strong> items</p>
+                <p>{{closestObject}} that has the shortest miss distance</p>
             </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <img :src="imgSrc" v-bind:title="imgTitle" class="img-fluid img-thumbnail">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <form v-show="!submitted" class="mt-5">
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" v-model="email" class="form-control form-control-lg">
-                    </div>
-                    <button type="submit" v-on:click.prevent="process" class="btn btn-primary">Submit</button>
-                </form>
-                <h4 v-show="submitted" v-cloak class="mt-5">Thanks for signing up!</h4>
-            </div>
+            <table class="table">
+                <thead class="thead-light">
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Close Approach Date</th>
+                    <th>Miss Distance</th>
+                    <th>Remove</th>
+                </thead>
+                <tbody v-cloak>
+                <tr v-for="(a, index) in asteroids" :key="a.neo_reference_id">
+                    <td>{{index + 1}}</td>
+                    <td>{{a.name}}</td>
+                    <td>{{getCloseApproachDate(a)}}</td>
+                    <td>
+                        <ul class="list-group" v-if="a.close_approach_data.length > 0">
+                            <li class="list-group-item" v-for="(value, key, index) in a.close_approach_data[0].miss_distance">
+                                <strong>{{index + 1}} </strong> - {{key}}: {{value}}
+                            </li>
+                        </ul>
+                    </td>
+                    <td>
+                        <button class="btn btn-warning" @click="remove(index)">remove</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
